@@ -44,6 +44,7 @@
 
 #include "arch/generic/pcstate.hh"
 #include "arch/riscv/regs/vector.hh"
+#include "arch/riscv/regs/matrix.hh"
 #include "enums/PrivilegeModeSet.hh"
 #include "enums/RiscvType.hh"
 
@@ -68,6 +69,7 @@ class PCState : public GenericISA::UPCState<4>
     bool _new_vconf = false;
     VTYPE _vtype = (1ULL << 63); // vtype.vill = 1 at initial;
     uint32_t _vl = 0;
+    MTYPE _mtype = (1ULL << 63); // mtype.vill = 1 at initial;
     bool _zcmtSecondFetch = false;
     Addr _zcmtPc = 0;
 
@@ -75,7 +77,7 @@ class PCState : public GenericISA::UPCState<4>
     PCState(const PCState &other) : Base(other),
         _compressed(other._compressed),
         _rvType(other._rvType), _new_vconf(other._new_vconf), _vtype(other._vtype),
-        _vl(other._vl), _zcmtSecondFetch(other._zcmtSecondFetch), _zcmtPc(other._zcmtPc)
+        _vl(other._vl), _mtype(other._mtype), _zcmtSecondFetch(other._zcmtSecondFetch), _zcmtPc(other._zcmtPc)
     {}
     PCState &operator=(const PCState &other) = default;
     PCState() = default;
@@ -98,6 +100,7 @@ class PCState : public GenericISA::UPCState<4>
         _new_vconf = pcstate._new_vconf;
         _vtype = pcstate._vtype;
         _vl = pcstate._vl;
+        _mtype = pcstate._mtype;
         _zcmtSecondFetch = pcstate._zcmtSecondFetch;
         _zcmtPc = pcstate._zcmtPc;
     }
@@ -116,6 +119,9 @@ class PCState : public GenericISA::UPCState<4>
 
     void vl(uint32_t v) { _vl = v; }
     uint32_t vl() const { return _vl; }
+    
+    void mtype(MTYPE v) { _mtype = v; }
+    MTYPE mtype() const { return _mtype; }
 
     void zcmtSecondFetch(bool z) { _zcmtSecondFetch = z; }
     bool zcmtSecondFetch() const { return _zcmtSecondFetch; }
@@ -138,6 +144,7 @@ class PCState : public GenericISA::UPCState<4>
         return Base::equals(other) &&
             (_new_vconf == opc._new_vconf) &&
             (!_new_vconf || (_vtype == opc._vtype && _vl == opc._vl)) &&
+            _mtype == opc._mtype &&
             _zcmtSecondFetch == opc._zcmtSecondFetch &&
             _zcmtPc == opc._zcmtPc;
     }
@@ -150,6 +157,7 @@ class PCState : public GenericISA::UPCState<4>
         SERIALIZE_SCALAR(_new_vconf);
         SERIALIZE_SCALAR(_vtype);
         SERIALIZE_SCALAR(_vl);
+        SERIALIZE_SCALAR(_mtype);
         SERIALIZE_SCALAR(_compressed);
         SERIALIZE_SCALAR(_zcmtSecondFetch);
         SERIALIZE_SCALAR(_zcmtPc);
@@ -163,6 +171,7 @@ class PCState : public GenericISA::UPCState<4>
         UNSERIALIZE_SCALAR(_new_vconf);
         UNSERIALIZE_SCALAR(_vtype);
         UNSERIALIZE_SCALAR(_vl);
+        UNSERIALIZE_SCALAR(_mtype);
         UNSERIALIZE_SCALAR(_compressed);
         UNSERIALIZE_SCALAR(_zcmtSecondFetch);
         UNSERIALIZE_SCALAR(_zcmtPc);

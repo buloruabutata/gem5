@@ -164,3 +164,8 @@ def bitfield BIT31      bit31;
 def bitfield BIT30      bit30;
 def bitfield SIMM5      uimm_vsetivli;
 def bitfield SIMM3      simm3;
+
+// matrix instructions
+def bitfield MFUNCT6    mfunct6;
+def bitfield IM         im;
+def bitfield IMM10      imm10;

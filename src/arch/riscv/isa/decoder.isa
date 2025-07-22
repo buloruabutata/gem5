@@ -6360,6 +6360,48 @@ decode QUADRANT default Unknown::unknown() {
             }
         }
 
+        0x1d: decode FUNCT3 {
+            // Matrix Extension Config Instructions
+            0x4: decode MFUNCT6 {
+                0x0: decode IM {
+                    format MConfOp {
+                        0x0: msettype({{
+                            uint64_t requested_mtype = Rs1_ud;
+                        }}, {{
+                            Rd_ud = requested_mtype;
+                            Mtype = requested_mtype;
+                        }}, MSetMtypeDeclare, MSetMtypeBranchTarget,
+                          SimdConfigOp, IsUncondControl, IsDirectControl);
+                          
+                        0x1: msettypei({{
+                            uint64_t requested_mtype = mimm10;
+                        }},{{  
+                            Mtype &= ~(1ULL << 63);      // 最高位置0                  
+                            Mtype = (Mtype & ~0x3FF) | requested_mtype;
+                            Rd_ud = Mtype;
+                        }}, MSetMtypeDeclare, MSetMtypeBranchTarget
+                        , SimdConfigOp, IsUncondControl
+                        , IsDirectControl);
+                    }
+                }
+            }
+            0x5: decode MFUNCT6 {
+                0x0: decode IM {
+                    format MConfOp {
+                       0x1: msettypehi({{
+                            uint64_t requested_mtype_hi = mimm10 << 10;
+                        }}, {{
+                            Mtype &= ~(1ULL << 63); 
+                            Mtype = (Mtype & ~(0x3FFULL << 10)) | requested_mtype_hi ;                      
+                            Rd_ud = Mtype;
+                        }},  MSetMtypeDeclare, MSetMtypeBranchTarget
+                          , SimdConfigOp, IsUncondControl
+                          , IsDirectControl);
+                    }
+                }
+            }
+        }
+
         0x1e: M5Op::M5Op();
     }
 }

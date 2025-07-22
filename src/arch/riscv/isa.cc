@@ -47,6 +47,7 @@
 #include "arch/riscv/regs/int.hh"
 #include "arch/riscv/regs/misc.hh"
 #include "arch/riscv/regs/vector.hh"
+#include "arch/riscv/regs/matrix.hh"
 #include "base/bitfield.hh"
 #include "base/compiler.hh"
 #include "base/logging.hh"
@@ -203,6 +204,8 @@ const std::array<const char *, NUM_MISCREGS> MiscRegNames = {{
     [MISCREG_VL]            = "VL",
     [MISCREG_VTYPE]         = "VTYPE",
     [MISCREG_VLENB]         = "VLENB",
+    
+    [MISCREG_MTYPE]         = "MTYPE",
 
     // H-extension (RV64) registers
 
@@ -628,6 +631,12 @@ ISA::readMiscReg(RegIndex idx)
                   (readMiscRegNoEffect(MISCREG_VXRM) << 1);
         }
         break;
+      
+      case MISCREG_MTYPE:
+        {
+            auto rpc = tc->pcState().as<PCState>();
+            return rpc.mtype();
+        }
 
       case MISCREG_MNSTATUS:
         {

@@ -111,6 +111,8 @@ def operands {{
     'VL': PCStateOp('uw', 'vl', (None, None, 'IsControl'), 11),
 #VLENB, actually the CSR is read only.
     'VlenbBits': PCStateOp('ud', 'vlenb', (None, None, 'IsControl'), 12),
+#matrix    
+    'Mtype': PCStateOp('ud', 'mtype', (None, None, 'IsControl'), 13),
 #Zcmt Second Fetch
     'ZcmtSecondFetch': PCStateOp(
         'bl', 'zcmtSecondFetch', (None, None, 'IsControl'), 13),

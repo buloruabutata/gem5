@@ -1,0 +1,99 @@
+def format MConfOp(code, write_code, declare_class, branch_class, *flags) {{
+    iop = InstObjParams(
+        name,
+        Name,
+        'MConfOp',
+        {
+            'code': code,
+            'write_code': write_code,
+        },
+        flags
+    )
+    declareTemplate = eval(declare_class)
+    branchTargetTemplate = eval(branch_class)
+
+    header_output = declareTemplate.subst(iop)
+    decoder_output = MConfConstructor.subst(iop)
+    decode_block = MConfDecodeBlock.subst(iop)
+    exec_output = MConfExecute.subst(iop) + branchTargetTemplate.subst(iop)
+}};
+
+def template MSetMtypeDeclare {{
+    //
+    // Static instruction class for "%(mnemonic)s".
+    //
+    class %(class_name)s : public %(base_class)s
+    {
+      private:
+        %(reg_idx_arr_decl)s;
+        MTYPE getNewMtype(MTYPE, MTYPE) const;
+
+      public:
+        /// Constructor.
+        %(class_name)s(ExtMachInst machInst);
+        Fault execute(ExecContext *, trace::InstRecord *) const override;
+        std::unique_ptr<PCStateBase> branchTarget(
+                ThreadContext *tc) const override;
+
+        using StaticInst::branchTarget;
+        using %(base_class)s::generateDisassembly;
+
+    };
+}};
+
+def template  MSetMtypeBranchTarget {{
+    std::unique_ptr<PCStateBase>
+    %(class_name)s::branchTarget(ThreadContext *tc) const
+    {
+        PCStateBase *pc_ptr = tc->pcState().clone();
+
+        uint64_t requested_mtype = tc->getReg(srcRegIdx(0));
+
+        MTYPE new_mtype = getNewMtype(
+            pc_ptr->as<PCState>().mtype(), requested_mtype);
+            pc_ptr->as<PCState>().mtype(new_mtype);
+            return std::unique_ptr<PCStateBase>{pc_ptr};
+    }
+}};
+
+
+def template MConfConstructor {{
+    %(class_name)s::%(class_name)s(ExtMachInst _machInst)
+        : %(base_class)s("%(mnemonic)s", _machInst,%(op_class)s)
+        {
+            %(set_reg_idx_arr)s;
+            %(constructor)s;
+        }
+}};
+
+def template MConfDecodeBlock {{
+    return new %(class_name)s(machInst);
+}};
+
+def template MConfExecute {{
+    MTYPE
+    %(class_name)s::getNewMtype(
+        MTYPE oldMtype, MTYPE reqMtype)  const
+        {
+               MTYPE newMtype = oldMtype;
+        if (oldMtype != reqMtype) {
+            newMtype = reqMtype;
+            
+            newMtype.mill=0;
+        }
+        return newMtype;
+    }
+
+    Fault
+    %(class_name)s::execute(ExecContext *xc,
+        trace::InstRecord *traceData) const
+    {
+        %(op_decl)s;
+        %(op_rd)s;
+        %(code)s;
+        %(write_code)s;
+
+        %(op_wb)s;
+        return NoFault;
+    }
+ }};

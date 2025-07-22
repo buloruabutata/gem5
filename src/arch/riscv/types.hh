@@ -68,6 +68,21 @@ BitUnion64(ExtMachInst)
         Bitfield<37, 35> vsew;
         Bitfield<34, 32> vlmul;
     EndSubBitUnion(vtype8)
+
+    Bitfield<48> mill;
+    SubBitUnion(mtype16, 47, 32)
+        Bitfield<47> mba;
+        Bitfield<46> mfp64;
+        Bitfield<45,44> mfp32;
+        Bitfield<42,41> mfp16;
+        Bitfield<40,39> mfp8;
+        Bitfield<38> mint64;
+        Bitfield<37> mint32;
+        Bitfield<36> mint16;
+        Bitfield<35> mint4;
+        Bitfield<34,32> msew;
+    EndSubBitUnion(mtype16)
+
     // Common
     uint32_t            instBits;
     Bitfield< 1,  0>    quadRant;
@@ -180,6 +195,11 @@ BitUnion64(ExtMachInst)
     Bitfield<19, 15>    uimm_vsetivli;
     // vsetvl
     Bitfield<31, 25>    bit31_25;
+
+    // matrix
+    Bitfield<31, 26>    mfunct6;
+    Bitfield<25>        im;
+    Bitfield<24, 15>    imm10;
 
 EndBitUnion(ExtMachInst)
 

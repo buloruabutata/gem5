@@ -203,6 +203,8 @@ enum MiscRegIndex
     MISCREG_VTYPE,
     MISCREG_VLENB,
 
+    MISCREG_MTYPE,
+
     // H-extension registers (RV64)
 
     MISCREG_HVIP, // vssi bit is alias for mip.vssi
@@ -534,6 +536,8 @@ enum CSRIndex
     CSR_VL           = 0xC20,
     CSR_VTYPE        = 0xC21,
     CSR_VLENB        = 0xC22,
+
+    CSR_MTYPE        = 0xC40,
 
     CSR_MNSCRATCH    = 0x740,
     CSR_MNEPC        = 0x741,
@@ -1223,6 +1227,9 @@ const std::unordered_map<int, CSRMetadata> CSRData = {
         {"vtype", MISCREG_VTYPE, rvTypeFlags(RV64, RV32), isaExtsFlags('v')}},
     {CSR_VLENB,
         {"VLENB", MISCREG_VLENB, rvTypeFlags(RV64, RV32), isaExtsFlags('v')}},
+
+    {CSR_MTYPE,
+        {"MTYPE", MISCREG_MTYPE, rvTypeFlags(RV64, RV32), isaExtsFlags()}},
 
     {CSR_MNSCRATCH,
         {"mnscratch", MISCREG_MNSCRATCH, rvTypeFlags(RV64, RV32),
