@@ -19,9 +19,10 @@ namespace RiscvISA
     {
         protected:
         uint64_t mimm10;
+        uint64_t msetval;
         MConfOp(const char *mnem, ExtMachInst _extMachInst, OpClass __opClass)
             : RiscvStaticInst(mnem, _extMachInst, __opClass),
-              mimm10(_extMachInst.imm10)
+              mimm10(_extMachInst.imm10), msetval(_extMachInst.setval)
     {
         this->flags[IsMatrix] = true;
     }

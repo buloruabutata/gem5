@@ -6400,6 +6400,123 @@ decode QUADRANT default Unknown::unknown() {
                     }
                 }
             }
+            0x6: decode MFUNCT6 {
+                0x00: decode IM {
+                    0x1: decode FIELD{
+                        format MConfOp {
+                            0x0: msetsew({{
+                                uint64_t new_sew = msetval;
+                            }}, {{
+                                Mtype &= ~(1ULL << 63); 
+                                Mtype = (Mtype & ~0x7) | new_sew ;  
+                                Rd_ud = Mtype;                  
+                            }},  MSetMtypeDeclare, MSetMtypeBranchTarget
+                            , SimdConfigOp, IsUncondControl
+                            , IsDirectControl);
+
+                            0x1: msetint4({{
+                                uint64_t new_int4 = msetval & 0x1;
+                            }}, {{
+                                Mtype &= ~(1ULL << 63); 
+                                Mtype = (Mtype & ~0x8) | new_int4 << 3;  
+                                Rd_ud = Mtype;                  
+                            }},  MSetMtypeDeclare, MSetMtypeBranchTarget
+                            , SimdConfigOp, IsUncondControl
+                            , IsDirectControl);
+
+                            0x2: msetint8({{
+                                uint64_t new_int8 = msetval & 0x1;
+                            }}, {{
+                                Mtype &= ~(1ULL << 63); 
+                                Mtype = (Mtype & ~0x10) | new_int8 << 4;  
+                                Rd_ud = Mtype;                  
+                            }},  MSetMtypeDeclare, MSetMtypeBranchTarget
+                            , SimdConfigOp, IsUncondControl
+                            , IsDirectControl);
+
+                            0x3: msetint16({{
+                                uint64_t new_int16 = msetval & 0x1;
+                            }}, {{
+                                Mtype &= ~(1ULL << 63); 
+                                Mtype = (Mtype & ~0x20) | new_int16 << 5;  
+                                Rd_ud = Mtype;                  
+                            }},  MSetMtypeDeclare, MSetMtypeBranchTarget
+                            , SimdConfigOp, IsUncondControl
+                            , IsDirectControl);
+
+                            0x4: msetint32({{
+                                uint64_t new_int32 = msetval & 0x1;
+                            }}, {{
+                                Mtype &= ~(1ULL << 63); 
+                                Mtype = (Mtype & ~0x40) | new_int32 << 6;  
+                                Rd_ud = Mtype;                  
+                            }},  MSetMtypeDeclare, MSetMtypeBranchTarget
+                            , SimdConfigOp, IsUncondControl
+                            , IsDirectControl);
+
+                            0x5: msetint64({{
+                                uint64_t new_int64 = msetval & 0x1;
+                            }}, {{
+                                Mtype &= ~(1ULL << 63); 
+                                Mtype = (Mtype & ~0x80) | new_int64 << 7;  
+                                Rd_ud = Mtype;                  
+                            }},  MSetMtypeDeclare, MSetMtypeBranchTarget
+                            , SimdConfigOp, IsUncondControl
+                            , IsDirectControl);
+
+                            0x6: msetfp8({{
+                                uint64_t new_fp8 = msetval & 0x3;
+                            }}, {{
+                                Mtype &= ~(1ULL << 63); 
+                                Mtype = (Mtype & ~0x300) | new_fp8 << 9;  
+                                Rd_ud = Mtype;                  
+                            }},  MSetMtypeDeclare, MSetMtypeBranchTarget
+                            , SimdConfigOp, IsUncondControl
+                            , IsDirectControl);
+
+                            0x7: msetfp16({{
+                                uint64_t new_fp16 = msetval & 0x3;
+                            }}, {{
+                                Mtype &= ~(1ULL << 63); 
+                                Mtype = (Mtype & ~0xc00) | new_fp16 << 11;  
+                                Rd_ud = Mtype;                  
+                            }},  MSetMtypeDeclare, MSetMtypeBranchTarget
+                            , SimdConfigOp, IsUncondControl
+                            , IsDirectControl);
+
+                            0x8: msetfp32({{
+                                uint64_t new_fp32 = msetval & 0x3;
+                            }}, {{
+                                Mtype &= ~(1ULL << 63); 
+                                Mtype = (Mtype & ~0x3000) | new_fp32 << 13;  
+                                Rd_ud = Mtype;                  
+                            }},  MSetMtypeDeclare, MSetMtypeBranchTarget
+                            , SimdConfigOp, IsUncondControl
+                            , IsDirectControl);
+
+                            0x9: msetfp64({{
+                                uint64_t new_fp64 = msetval & 0x1;
+                            }}, {{
+                                Mtype &= ~(1ULL << 63); 
+                                Mtype = (Mtype & ~0x4000) | new_fp64 << 14;  
+                                Rd_ud = Mtype;                  
+                            }},  MSetMtypeDeclare, MSetMtypeBranchTarget
+                            , SimdConfigOp, IsUncondControl
+                            , IsDirectControl);
+                            
+                            0xa:msetba({{
+                                uint64_t new_mba = msetval & 0x1;
+                            }}, {{
+                                Mtype &= ~(1ULL << 63); 
+                                Mtype = (Mtype & ~0x8000) | new_mba << 15;  
+                                Rd_ud = Mtype;                  
+                            }},  MSetMtypeDeclare, MSetMtypeBranchTarget
+                            , SimdConfigOp, IsUncondControl
+                            , IsDirectControl);                            
+                        }
+                    }
+                }
+            }
         }
 
         0x1e: M5Op::M5Op();

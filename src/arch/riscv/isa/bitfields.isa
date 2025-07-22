@@ -169,3 +169,5 @@ def bitfield SIMM3      simm3;
 def bitfield MFUNCT6    mfunct6;
 def bitfield IM         im;
 def bitfield IMM10      imm10;
+def bitfield SETVAL     setval;
+def bitfield FIELD      field;

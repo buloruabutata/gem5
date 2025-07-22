@@ -201,6 +201,9 @@ BitUnion64(ExtMachInst)
     Bitfield<25>        im;
     Bitfield<24, 15>    imm10;
 
+    Bitfield<24, 20>    setval;
+    Bitfield<18, 15>    field;
+
 EndBitUnion(ExtMachInst)
 
 constexpr unsigned MaxVecLenInBits = 65536;
