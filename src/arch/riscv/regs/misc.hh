@@ -204,6 +204,10 @@ enum MiscRegIndex
     MISCREG_VLENB,
 
     MISCREG_MTYPE,
+    MISCREG_MTILEM,
+    MISCREG_MTILEK,
+    MISCREG_MTILEN,
+
 
     // H-extension registers (RV64)
 
@@ -538,6 +542,9 @@ enum CSRIndex
     CSR_VLENB        = 0xC22,
 
     CSR_MTYPE        = 0xC40,
+    CSR_MTILEM       = 0xC41,
+    CSR_MTILEK       = 0xC42,
+    CSR_MTILEN       = 0xC43,
 
     CSR_MNSCRATCH    = 0x740,
     CSR_MNEPC        = 0x741,
@@ -1230,6 +1237,12 @@ const std::unordered_map<int, CSRMetadata> CSRData = {
 
     {CSR_MTYPE,
         {"MTYPE", MISCREG_MTYPE, rvTypeFlags(RV64, RV32), isaExtsFlags()}},
+    {CSR_MTILEM,
+        {"MTILEM", MISCREG_MTILEM, rvTypeFlags(RV64, RV32), isaExtsFlags()}},
+    {CSR_MTILEK,
+        {"MTILEK", MISCREG_MTILEK, rvTypeFlags(RV64, RV32), isaExtsFlags()}},
+    {CSR_MTILEN,
+        {"MTILEN", MISCREG_MTILEN, rvTypeFlags(RV64, RV32), isaExtsFlags()}},
 
     {CSR_MNSCRATCH,
         {"mnscratch", MISCREG_MNSCRATCH, rvTypeFlags(RV64, RV32),

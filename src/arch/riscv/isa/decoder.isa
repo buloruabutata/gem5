@@ -6384,6 +6384,26 @@ decode QUADRANT default Unknown::unknown() {
                         , IsDirectControl);
                     }
                 }
+                0x01: decode IM {
+                    format MConfOp {
+                        0x0: msettilen({{
+                            uint64_t requested_mtilen = Rs1_ud;
+                        }}, {{
+                            Rd_ud = requested_mtilen;
+                            Mtilen = requested_mtilen;
+                        }}, MSetMtypeDeclare, MSetMtypeBranchTarget,
+                          SimdConfigOp, IsUncondControl, IsDirectControl);
+                          
+                        0x1: msettileni({{
+                            uint64_t requested_mtilen = mimm10;
+                        }},{{
+                            Mtilen = (Mtilen & ~0x3FF) | requested_mtilen;
+                            Rd_ud = Mtilen;
+                        }}, MSetMtypeDeclare, MSetMtypeBranchTarget
+                        , SimdConfigOp, IsUncondControl
+                        , IsDirectControl);
+                    }
+                }
             }
             0x5: decode MFUNCT6 {
                 0x0: decode IM {
@@ -6397,6 +6417,26 @@ decode QUADRANT default Unknown::unknown() {
                         }},  MSetMtypeDeclare, MSetMtypeBranchTarget
                           , SimdConfigOp, IsUncondControl
                           , IsDirectControl);
+                    }
+                }
+                0x01: decode IM {
+                    format MConfOp {
+                        0x0: msettilem({{
+                            uint64_t requested_mtilem = Rs1_ud;
+                        }}, {{
+                            Rd_ud = requested_mtilem;
+                            Mtilem = requested_mtilem;
+                        }}, MSetMtypeDeclare, MSetMtypeBranchTarget,
+                          SimdConfigOp, IsUncondControl, IsDirectControl);
+                          
+                        0x1: msettilemi({{
+                            uint64_t requested_mtilem = mimm10;
+                        }},{{
+                            Mtilem = (Mtilem & ~0x3FF) | requested_mtilem;
+                            Rd_ud = Mtilem;
+                        }}, MSetMtypeDeclare, MSetMtypeBranchTarget
+                        , SimdConfigOp, IsUncondControl
+                        , IsDirectControl);
                     }
                 }
             }
@@ -6514,6 +6554,26 @@ decode QUADRANT default Unknown::unknown() {
                             , SimdConfigOp, IsUncondControl
                             , IsDirectControl);                            
                         }
+                    }
+                }
+                0x01: decode IM {
+                    format MConfOp {
+                        0x0: msettilek({{
+                            uint64_t requested_mtilek = Rs1_ud;
+                        }}, {{
+                            Rd_ud = requested_mtilek;
+                            Mtilek = requested_mtilek;
+                        }}, MSetMtypeDeclare, MSetMtypeBranchTarget,
+                          SimdConfigOp, IsUncondControl, IsDirectControl);
+                          
+                        0x1: msettileki({{
+                            uint64_t requested_mtilek = mimm10;
+                        }},{{
+                            Mtilek = (Mtilek & ~0x3FF) | requested_mtilek;
+                            Rd_ud = Mtilek;
+                        }}, MSetMtypeDeclare, MSetMtypeBranchTarget
+                        , SimdConfigOp, IsUncondControl
+                        , IsDirectControl);
                     }
                 }
             }

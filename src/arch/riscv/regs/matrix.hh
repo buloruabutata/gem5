@@ -30,7 +30,16 @@ BitUnion64(MTYPE)
     Bitfield<3>     mint4;
     Bitfield<2,0>   msew;
 EndBitUnion(MTYPE)
- 
+
+BitUnion64(MTILEM)
+EndBitUnion(MTILEM)
+
+BitUnion64(MTILEN)
+EndBitUnion(MTILEN)
+
+BitUnion64(MTILEK)
+EndBitUnion(MTILEK)
+
 }
 } // namespace gem5
 

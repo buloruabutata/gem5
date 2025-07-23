@@ -206,6 +206,9 @@ const std::array<const char *, NUM_MISCREGS> MiscRegNames = {{
     [MISCREG_VLENB]         = "VLENB",
     
     [MISCREG_MTYPE]         = "MTYPE",
+    [MISCREG_MTILEM]         = "MTILEM",
+    [MISCREG_MTILEK]         = "MTILEK",
+    [MISCREG_MTILEN]         = "MTILEN",
 
     // H-extension (RV64) registers
 
@@ -636,6 +639,24 @@ ISA::readMiscReg(RegIndex idx)
         {
             auto rpc = tc->pcState().as<PCState>();
             return rpc.mtype();
+        }
+
+      case MISCREG_MTILEM:
+        {
+            auto rpc = tc->pcState().as<PCState>();
+            return rpc.mtilem();
+        }
+
+      case MISCREG_MTILEK:
+        {
+            auto rpc = tc->pcState().as<PCState>();
+            return rpc.mtilek();
+        }
+
+      case MISCREG_MTILEN:
+        {
+            auto rpc = tc->pcState().as<PCState>();
+            return rpc.mtilen();
         }
 
       case MISCREG_MNSTATUS:

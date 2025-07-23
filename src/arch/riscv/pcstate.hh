@@ -70,6 +70,9 @@ class PCState : public GenericISA::UPCState<4>
     VTYPE _vtype = (1ULL << 63); // vtype.vill = 1 at initial;
     uint32_t _vl = 0;
     MTYPE _mtype = (1ULL << 63); // mtype.vill = 1 at initial;
+    MTILEM _mtilem = 0;
+    MTILEK _mtilek = 0;
+    MTILEN _mtilen = 0;
     bool _zcmtSecondFetch = false;
     Addr _zcmtPc = 0;
 
@@ -77,7 +80,7 @@ class PCState : public GenericISA::UPCState<4>
     PCState(const PCState &other) : Base(other),
         _compressed(other._compressed),
         _rvType(other._rvType), _new_vconf(other._new_vconf), _vtype(other._vtype),
-        _vl(other._vl), _mtype(other._mtype), _zcmtSecondFetch(other._zcmtSecondFetch), _zcmtPc(other._zcmtPc)
+        _vl(other._vl), _mtype(other._mtype), _mtilem(other._mtilem), _mtilek(other._mtilek), _mtilen(other._mtilen), _zcmtSecondFetch(other._zcmtSecondFetch), _zcmtPc(other._zcmtPc)
     {}
     PCState &operator=(const PCState &other) = default;
     PCState() = default;
@@ -101,6 +104,9 @@ class PCState : public GenericISA::UPCState<4>
         _vtype = pcstate._vtype;
         _vl = pcstate._vl;
         _mtype = pcstate._mtype;
+        _mtilem = pcstate._mtilem;
+        _mtilek = pcstate._mtilek;
+        _mtilen = pcstate._mtilen;
         _zcmtSecondFetch = pcstate._zcmtSecondFetch;
         _zcmtPc = pcstate._zcmtPc;
     }
@@ -123,6 +129,15 @@ class PCState : public GenericISA::UPCState<4>
     void mtype(MTYPE v) { _mtype = v; }
     MTYPE mtype() const { return _mtype; }
 
+    void mtilem(MTILEM v) { _mtilem = v; }
+    MTILEM mtilem() const { return _mtilem; }
+
+    void mtilek(MTILEK v) { _mtilek = v; }
+    MTILEK mtilek() const { return _mtilek; }
+
+    void mtilen(MTILEN v) { _mtilen = v; }
+    MTILEN mtilen() const { return _mtilen; }
+
     void zcmtSecondFetch(bool z) { _zcmtSecondFetch = z; }
     bool zcmtSecondFetch() const { return _zcmtSecondFetch; }
 
@@ -144,7 +159,7 @@ class PCState : public GenericISA::UPCState<4>
         return Base::equals(other) &&
             (_new_vconf == opc._new_vconf) &&
             (!_new_vconf || (_vtype == opc._vtype && _vl == opc._vl)) &&
-            _mtype == opc._mtype &&
+            (_mtype == opc._mtype && _mtilem == opc._mtilem && _mtilek == opc._mtilek && _mtilen == opc._mtilen) &&
             _zcmtSecondFetch == opc._zcmtSecondFetch &&
             _zcmtPc == opc._zcmtPc;
     }
@@ -158,6 +173,9 @@ class PCState : public GenericISA::UPCState<4>
         SERIALIZE_SCALAR(_vtype);
         SERIALIZE_SCALAR(_vl);
         SERIALIZE_SCALAR(_mtype);
+        SERIALIZE_SCALAR(_mtilem);
+        SERIALIZE_SCALAR(_mtilek);
+        SERIALIZE_SCALAR(_mtilen);
         SERIALIZE_SCALAR(_compressed);
         SERIALIZE_SCALAR(_zcmtSecondFetch);
         SERIALIZE_SCALAR(_zcmtPc);
@@ -172,6 +190,9 @@ class PCState : public GenericISA::UPCState<4>
         UNSERIALIZE_SCALAR(_vtype);
         UNSERIALIZE_SCALAR(_vl);
         UNSERIALIZE_SCALAR(_mtype);
+        UNSERIALIZE_SCALAR(_mtilem);
+        UNSERIALIZE_SCALAR(_mtilek);
+        UNSERIALIZE_SCALAR(_mtilen);
         UNSERIALIZE_SCALAR(_compressed);
         UNSERIALIZE_SCALAR(_zcmtSecondFetch);
         UNSERIALIZE_SCALAR(_zcmtPc);
