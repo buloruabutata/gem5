@@ -205,10 +205,16 @@ const std::array<const char *, NUM_MISCREGS> MiscRegNames = {{
     [MISCREG_VTYPE]         = "VTYPE",
     [MISCREG_VLENB]         = "VLENB",
     
+    // Matrix Extension
     [MISCREG_MTYPE]         = "MTYPE",
     [MISCREG_MTILEM]         = "MTILEM",
     [MISCREG_MTILEK]         = "MTILEK",
     [MISCREG_MTILEN]         = "MTILEN",
+    [MISCREG_MLENB]         = "MLENB",
+    [MISCREG_MRLENB]        = "MRLENB",
+    [MISCREG_MAMUL]         = "MAMUL",
+    [MISCREG_MSTART]        = "MSTART",
+    [MISCREG_MCSR]          = "MCSR",
 
     // H-extension (RV64) registers
 
@@ -305,6 +311,8 @@ RegClass ccRegClass(CCRegClass, CCRegClassName, 0, debug::IntRegs);
 
 ISA::ISA(const Params &p) : BaseISA(p, "riscv"),
     _rvType(p.riscv_type), enableRvv(p.enable_rvv), vlen(p.vlen), elen(p.elen),
+    // Matrix Extension
+    melen(p.melen), mlen(p.mlen), mrlen(p.mrlen),
     _privilegeModeSet(p.privilege_mode_set),
     _wfiResumeOnPending(p.wfi_resume_on_pending), _enableZcd(p.enable_Zcd),
     _enableSmrnmi(p.enable_Smrnmi)
@@ -324,6 +332,17 @@ ISA::ISA(const Params &p) : BaseISA(p, "riscv"),
 
     inform("RVV enabled, VLEN = %d bits, ELEN = %d bits",
             p.vlen, p.elen);
+
+    // Matrix Extension
+    fatal_if( p.mrlen < p.melen,
+        "MRLEN should be greater or equal",
+            "than MELEN. Ch. 2RISC-V matrix spec.");
+    fatal_if( p.mlen < p.mrlen,
+    "MLEN should be greater or equal",
+        "than MRLEN. Ch. 2RISC-V matrix spec.");
+        
+    inform("RV M Extension enabled, MLEN = %d bits, MRLEN = %d bits, MELEN = %d bits", 
+            p.mlen, p.mrlen, p.melen);   
 
     miscRegFile.resize(NUM_PHYS_MISCREGS);
     clear();
@@ -644,19 +663,28 @@ ISA::readMiscReg(RegIndex idx)
       case MISCREG_MTILEM:
         {
             auto rpc = tc->pcState().as<PCState>();
-            return rpc.mtilem();
+            return (RegVal)rpc.mtilem();
         }
 
       case MISCREG_MTILEK:
         {
             auto rpc = tc->pcState().as<PCState>();
-            return rpc.mtilek();
+            return (RegVal)rpc.mtilek();
         }
 
       case MISCREG_MTILEN:
         {
             auto rpc = tc->pcState().as<PCState>();
-            return rpc.mtilen();
+            return (RegVal)rpc.mtilen();
+        }
+
+      case MISCREG_MLENB:
+        {
+            return getMatLenInBytes();
+        }
+      case MISCREG_MRLENB:
+        {
+            return getMatRowLenInBytes();
         }
 
       case MISCREG_MNSTATUS:

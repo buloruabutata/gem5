@@ -72,7 +72,43 @@ class RiscvVectorElementLength(UInt32):
         # not zero. Hence:
         if self.value & (self.value - 1) != 0:
             raise TypeError("ELEN is not a power of 2: %d" % self.value)
+        
+# Matrix Extension
+class RiscvMatrixLength(UInt32):
+    min = 8
+    max = 4294967296
 
+    def _check(self):
+        super()._check()
+
+        # MLEN needs to be a whole power of 2. We already know value is
+        # not zero. Hence:
+        if self.value & (self.value - 1) != 0:
+            raise TypeError("MLEN is not a power of 2: %d" % self.value)
+
+class RiscvMatrixRowLength(UInt32):
+    min = 8
+    max = 65536
+
+    def _check(self):
+        super()._check()
+
+        # MRLEN needs to be a whole power of 2. We already know value is
+        # not zero. Hence:
+        if self.value & (self.value - 1) != 0:
+            raise TypeError("MRLEN is not a power of 2: %d" % self.value)
+        
+class RiscvMatrixElementLength(UInt32):
+    min = 8
+    max = 65536
+
+    def _check(self):
+        super()._check()
+
+        # MELEN needs to be a whole power of 2. We already know value is
+        # not zero. Hence:
+        if self.value & (self.value - 1) != 0:
+            raise TypeError("MELEN is not a power of 2: %d" % self.value)
 
 class RiscvType(Enum):
     vals = ["RV32", "RV64"]
@@ -105,6 +141,24 @@ class RiscvISA(BaseISA):
         "Length of each vector element in bits. \
         ELEN in Ch. 2 of RISC-V vector spec",
     )
+
+    # Matrix Extension
+    melen = Param.RiscvMatrixElementLength(
+        32,
+        "Length of each matrix element in bits. \
+        MELEN in Ch. 2 of RISC-V matrix spec",        
+    )
+    mlen = Param.RiscvMatrixLength(
+        1024,
+        "Length of each matrix register in bits. \
+        MLEN in Ch. 2 of RISC-V matrix spec",        
+    )
+    mrlen = Param.RiscvMatrixRowLength(
+        128,
+        "Length of each matrix register in bits. \
+        MRLEN in Ch. 2 of RISC-V matrix spec",        
+    )
+
     privilege_mode_set = Param.PrivilegeModeSet(
         "MSU",  # set MHSU to enable hypervisor (H-extension)
         # No timing CPUs are supported in MHSU currently

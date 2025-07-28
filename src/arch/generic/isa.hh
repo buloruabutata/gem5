@@ -146,6 +146,10 @@ class BaseISA : public SimObject
      * For other ISAs, this function returns -1.
      */
     virtual int64_t getVectorLengthInBytes() const { return -1; }
+
+    // Matrix Extension
+    virtual int64_t getMatrixLengthInBytes() const { return -1; }
+    virtual int64_t getMatrixRowLengthInBytes() const { return -1; }
 };
 
 } // namespace gem5

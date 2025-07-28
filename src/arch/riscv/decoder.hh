@@ -69,6 +69,16 @@ class Decoder : public InstDecoder
     uint32_t vl = 0;
     bool squashed = false;
 
+    // Matrix Extension
+    MTYPE mtype;
+    uint32_t melen; 
+    uint32_t mlen; 
+    uint32_t mrlen;
+
+    uint32_t mtilem;
+    uint32_t mtilek;
+    uint32_t mtilen;
+
     virtual StaticInstPtr decodeInst(ExtMachInst mach_inst);
 
     /// Decode a machine instruction.

@@ -6385,23 +6385,37 @@ decode QUADRANT default Unknown::unknown() {
                     }
                 }
                 0x01: decode IM {
-                    format MConfOp {
+                    format MSetTilenOp {
                         0x0: msettilen({{
+                            uint64_t rd_bits = RD;
+                            uint64_t rs1_bits = RS1;
                             uint64_t requested_mtilen = Rs1_ud;
+                            MTYPE current_mtype = Mtype;
+                            uint32_t msew = getMSew(current_mtype.msew);
+                            uint32_t mtilenmax = getMtilenMax(mrlen, msew);
+                            uint32_t current_mtilen = Mtilen;
                         }}, {{
-                            Rd_ud = requested_mtilen;
-                            Mtilen = requested_mtilen;
-                        }}, MSetMtypeDeclare, MSetMtypeBranchTarget,
-                          SimdConfigOp, IsUncondControl, IsDirectControl);
-                          
+                            Rd_ud = new_mtilen;
+                            Mtilen = new_mtilen;
+                        }}, MSetTilenDeclare, MSetTilenBranchTarget
+                          , SimdConfigOp, IsUncondControl
+                          , IsDirectControl);
+                    }
+                    format MSetTileniOp {
                         0x1: msettileni({{
-                            uint64_t requested_mtilen = mimm10;
-                        }},{{
-                            Mtilen = (Mtilen & ~0x3FF) | requested_mtilen;
-                            Rd_ud = Mtilen;
-                        }}, MSetMtypeDeclare, MSetMtypeBranchTarget
-                        , SimdConfigOp, IsUncondControl
-                        , IsDirectControl);
+                            uint64_t rd_bits = RD;
+                            uint64_t rs1_bits = -1;
+                            uint64_t requested_mtilen = imm10;
+                            MTYPE current_mtype = Mtype;
+                            uint32_t msew = getMSew(current_mtype.msew);
+                            uint32_t mtilenmax = getMtilenMax(mrlen, msew);
+                            uint32_t current_mtilen = Mtilen;
+                        }}, {{
+                            Rd_ud = new_mtilen;
+                            Mtilen = new_mtilen;
+                        }}, MSetTileniDeclare, MSetTileniBranchTarget
+                          , SimdConfigOp, IsUncondControl
+                          , IsDirectControl);
                     }
                 }
             }
@@ -6420,23 +6434,33 @@ decode QUADRANT default Unknown::unknown() {
                     }
                 }
                 0x01: decode IM {
-                    format MConfOp {
+                    format MSetTilemOp {
                         0x0: msettilem({{
+                            uint64_t rd_bits = RD;
+                            uint64_t rs1_bits = RS1;
                             uint64_t requested_mtilem = Rs1_ud;
+                            uint32_t mtilemmax = getMtilemMax(mlen, mrlen);
+                            uint32_t current_mtilem = Mtilem; 
                         }}, {{
-                            Rd_ud = requested_mtilem;
-                            Mtilem = requested_mtilem;
-                        }}, MSetMtypeDeclare, MSetMtypeBranchTarget,
-                          SimdConfigOp, IsUncondControl, IsDirectControl);
-                          
-                        0x1: msettilemi({{
-                            uint64_t requested_mtilem = mimm10;
-                        }},{{
-                            Mtilem = (Mtilem & ~0x3FF) | requested_mtilem;
-                            Rd_ud = Mtilem;
-                        }}, MSetMtypeDeclare, MSetMtypeBranchTarget
+                            Rd_ud = new_mtilem;
+                            Mtilem = new_mtilem;
+                        }}, MSetTilemDeclare, MSetTilemBranchTarget
                         , SimdConfigOp, IsUncondControl
                         , IsDirectControl);
+                    }
+                    format MSetTilemiOp {
+                        0x1: msettilemi({{
+                            uint64_t rd_bits = RD;
+                            uint64_t rs1_bits = -1;
+                            uint64_t requested_mtilem = imm10;
+                            uint32_t mtilemmax = getMtilemMax(mlen, mrlen);
+                            uint32_t current_mtilem = Mtilem; 
+                        }}, {{
+                            Rd_ud = new_mtilem;
+                            Mtilem = new_mtilem;
+                        }}, MSetTilemiDeclare, MSetTilemiBranchTarget
+                          , SimdConfigOp, IsUncondControl
+                          , IsDirectControl);
                     }
                 }
             }
@@ -6445,7 +6469,7 @@ decode QUADRANT default Unknown::unknown() {
                     0x1: decode FIELD{
                         format MConfOp {
                             0x0: msetsew({{
-                                uint64_t new_sew = msetval;
+                                uint64_t new_sew = mimm;
                             }}, {{
                                 Mtype &= ~(1ULL << 63); 
                                 Mtype = (Mtype & ~0x7) | new_sew ;  
@@ -6455,7 +6479,7 @@ decode QUADRANT default Unknown::unknown() {
                             , IsDirectControl);
 
                             0x1: msetint4({{
-                                uint64_t new_int4 = msetval & 0x1;
+                                uint64_t new_int4 = mimm & 0x1;
                             }}, {{
                                 Mtype &= ~(1ULL << 63); 
                                 Mtype = (Mtype & ~0x8) | new_int4 << 3;  
@@ -6465,7 +6489,7 @@ decode QUADRANT default Unknown::unknown() {
                             , IsDirectControl);
 
                             0x2: msetint8({{
-                                uint64_t new_int8 = msetval & 0x1;
+                                uint64_t new_int8 = mimm & 0x1;
                             }}, {{
                                 Mtype &= ~(1ULL << 63); 
                                 Mtype = (Mtype & ~0x10) | new_int8 << 4;  
@@ -6475,7 +6499,7 @@ decode QUADRANT default Unknown::unknown() {
                             , IsDirectControl);
 
                             0x3: msetint16({{
-                                uint64_t new_int16 = msetval & 0x1;
+                                uint64_t new_int16 = mimm & 0x1;
                             }}, {{
                                 Mtype &= ~(1ULL << 63); 
                                 Mtype = (Mtype & ~0x20) | new_int16 << 5;  
@@ -6485,7 +6509,7 @@ decode QUADRANT default Unknown::unknown() {
                             , IsDirectControl);
 
                             0x4: msetint32({{
-                                uint64_t new_int32 = msetval & 0x1;
+                                uint64_t new_int32 = mimm & 0x1;
                             }}, {{
                                 Mtype &= ~(1ULL << 63); 
                                 Mtype = (Mtype & ~0x40) | new_int32 << 6;  
@@ -6495,7 +6519,7 @@ decode QUADRANT default Unknown::unknown() {
                             , IsDirectControl);
 
                             0x5: msetint64({{
-                                uint64_t new_int64 = msetval & 0x1;
+                                uint64_t new_int64 = mimm & 0x1;
                             }}, {{
                                 Mtype &= ~(1ULL << 63); 
                                 Mtype = (Mtype & ~0x80) | new_int64 << 7;  
@@ -6505,7 +6529,7 @@ decode QUADRANT default Unknown::unknown() {
                             , IsDirectControl);
 
                             0x6: msetfp8({{
-                                uint64_t new_fp8 = msetval & 0x3;
+                                uint64_t new_fp8 = mimm & 0x3;
                             }}, {{
                                 Mtype &= ~(1ULL << 63); 
                                 Mtype = (Mtype & ~0x300) | new_fp8 << 9;  
@@ -6515,7 +6539,7 @@ decode QUADRANT default Unknown::unknown() {
                             , IsDirectControl);
 
                             0x7: msetfp16({{
-                                uint64_t new_fp16 = msetval & 0x3;
+                                uint64_t new_fp16 = mimm & 0x3;
                             }}, {{
                                 Mtype &= ~(1ULL << 63); 
                                 Mtype = (Mtype & ~0xc00) | new_fp16 << 11;  
@@ -6525,7 +6549,7 @@ decode QUADRANT default Unknown::unknown() {
                             , IsDirectControl);
 
                             0x8: msetfp32({{
-                                uint64_t new_fp32 = msetval & 0x3;
+                                uint64_t new_fp32 = mimm & 0x3;
                             }}, {{
                                 Mtype &= ~(1ULL << 63); 
                                 Mtype = (Mtype & ~0x3000) | new_fp32 << 13;  
@@ -6535,7 +6559,7 @@ decode QUADRANT default Unknown::unknown() {
                             , IsDirectControl);
 
                             0x9: msetfp64({{
-                                uint64_t new_fp64 = msetval & 0x1;
+                                uint64_t new_fp64 = mimm & 0x1;
                             }}, {{
                                 Mtype &= ~(1ULL << 63); 
                                 Mtype = (Mtype & ~0x4000) | new_fp64 << 14;  
@@ -6545,7 +6569,7 @@ decode QUADRANT default Unknown::unknown() {
                             , IsDirectControl);
                             
                             0xa:msetba({{
-                                uint64_t new_mba = msetval & 0x1;
+                                uint64_t new_mba = mimm & 0x1;
                             }}, {{
                                 Mtype &= ~(1ULL << 63); 
                                 Mtype = (Mtype & ~0x8000) | new_mba << 15;  
@@ -6557,23 +6581,37 @@ decode QUADRANT default Unknown::unknown() {
                     }
                 }
                 0x01: decode IM {
-                    format MConfOp {
+                    format MSetTilekOp {
                         0x0: msettilek({{
+                            uint64_t rd_bits = RD;
+                            uint64_t rs1_bits = RS1;
                             uint64_t requested_mtilek = Rs1_ud;
+                            MTYPE current_mtype = Mtype;
+                            uint32_t msew = getMSew(current_mtype.msew); 
+                            uint32_t mtilekmax = getMtilekMax(mlen, mrlen, msew);
+                            uint32_t current_mtilek = Mtilek;
                         }}, {{
-                            Rd_ud = requested_mtilek;
-                            Mtilek = requested_mtilek;
-                        }}, MSetMtypeDeclare, MSetMtypeBranchTarget,
-                          SimdConfigOp, IsUncondControl, IsDirectControl);
-                          
+                            Rd_ud = new_mtilek;
+                            Mtilek = new_mtilek;
+                        }}, MSetTilekDeclare, MSetTilekBranchTarget
+                          , SimdConfigOp, IsUncondControl
+                          , IsDirectControl);
+                    }
+                    format MSetTilekiOp {
                         0x1: msettileki({{
-                            uint64_t requested_mtilek = mimm10;
-                        }},{{
-                            Mtilek = (Mtilek & ~0x3FF) | requested_mtilek;
-                            Rd_ud = Mtilek;
-                        }}, MSetMtypeDeclare, MSetMtypeBranchTarget
-                        , SimdConfigOp, IsUncondControl
-                        , IsDirectControl);
+                            uint64_t rd_bits = RD;
+                            uint64_t rs1_bits = -1;
+                            uint64_t requested_mtilek = imm10;
+                            MTYPE current_mtype = Mtype;
+                            uint32_t msew = getMSew(current_mtype.msew);     
+                            uint32_t mtilekmax = getMtilekMax(mlen, mrlen, msew);
+                            uint32_t current_mtilek = Mtilek;
+                        }}, {{
+                            Rd_ud = new_mtilek;
+                            Mtilek = new_mtilek;
+                        }}, MSetTilekiDeclare, MSetTilekiBranchTarget
+                          , SimdConfigOp, IsUncondControl
+                          , IsDirectControl);
                     }
                 }
             }

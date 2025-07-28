@@ -111,11 +111,14 @@ def operands {{
     'VL': PCStateOp('uw', 'vl', (None, None, 'IsControl'), 11),
 #VLENB, actually the CSR is read only.
     'VlenbBits': PCStateOp('ud', 'vlenb', (None, None, 'IsControl'), 12),
-#matrix    
+# Matrix Extension 
     'Mtype': PCStateOp('ud', 'mtype', (None, None, 'IsControl'), 14),
-    'Mtilem': PCStateOp('ud', 'mtilem', (None, None, 'IsControl'), 15),
-    'Mtilek': PCStateOp('ud', 'mtilek', (None, None, 'IsControl'), 16),
-    'Mtilen': PCStateOp('ud', 'mtilen', (None, None, 'IsControl'), 17),
+    'Mtilem': PCStateOp('uw', 'mtilem', (None, None, 'IsControl'), 15),
+    'Mtilek': PCStateOp('uw', 'mtilek', (None, None, 'IsControl'), 16),
+    'Mtilen': PCStateOp('uw', 'mtilen', (None, None, 'IsControl'), 17),
+# MLENB and MRLENB
+    'MlenbBits': PCStateOp('ud', 'mlenb', (None, None, 'IsControl'), 12),
+    'MrlenbBits': PCStateOp('ud', 'mrlenb', (None, None, 'IsControl'), 12),
 #Zcmt Second Fetch
     'ZcmtSecondFetch': PCStateOp(
         'bl', 'zcmtSecondFetch', (None, None, 'IsControl'), 13),

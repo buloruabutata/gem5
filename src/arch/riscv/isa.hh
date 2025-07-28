@@ -97,6 +97,11 @@ class ISA : public BaseISA
     */
     unsigned elen;
 
+    // Matrix Extension
+    unsigned melen;
+    unsigned mlen;
+    unsigned mrlen;
+
     /** The combination of privilege modes
      *  in Privilege Levels section of RISC-V privileged spec
      */
@@ -201,6 +206,17 @@ class ISA : public BaseISA
     unsigned getVecElemLenInBits() { return elen; }
 
     int64_t getVectorLengthInBytes() const override { return vlen >> 3; }
+
+    // Matrix Extension
+    unsigned getMatLenInBits() { return mlen; } 
+    unsigned getMatLenInBytes() { return mlen >> 3; }
+    unsigned getMatRowLenInBits() { return mrlen; }
+    unsigned getMatRowLenInBytes() { return mrlen >> 3; }
+    unsigned getMatElemLenInBits() { return melen; }
+
+    // Matrix Extension
+    int64_t getMatrixLengthInBytes() const override { return mlen >> 3; }
+    int64_t getMatrixRowLengthInBytes() const override { return mrlen >> 3; }
 
     PrivilegeModeSet getPrivilegeModeSet() { return _privilegeModeSet; }
 

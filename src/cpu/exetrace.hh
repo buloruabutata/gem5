@@ -67,6 +67,10 @@ class ExeTracerRecord : public InstRecord
           tracer(_tracer)
     {
         vectorLengthInBytes = _thread->getIsaPtr()->getVectorLengthInBytes();
+
+        // Matrix Extension
+        matrixLengthInBytes = _thread->getIsaPtr()->getMatrixLengthInBytes();
+        matrixRowLengthInBytes = _thread->getIsaPtr()->getMatrixRowLengthInBytes();
     }
 
     void traceInst(const StaticInstPtr &inst, bool ran);
@@ -76,6 +80,10 @@ class ExeTracerRecord : public InstRecord
   protected:
     const ExeTracer &tracer;
     int64_t vectorLengthInBytes;
+
+    // Matrix Extension
+    int64_t matrixLengthInBytes;
+    int64_t matrixRowLengthInBytes;
 };
 
 class ExeTracer : public InstTracer

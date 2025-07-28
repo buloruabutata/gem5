@@ -202,11 +202,13 @@ enum MiscRegIndex
     MISCREG_VL,
     MISCREG_VTYPE,
     MISCREG_VLENB,
-
+    // Matrix Extension
     MISCREG_MTYPE,
     MISCREG_MTILEM,
     MISCREG_MTILEK,
     MISCREG_MTILEN,
+    MISCREG_MLENB,
+    MISCREG_MRLENB,
 
 
     // H-extension registers (RV64)
@@ -540,11 +542,16 @@ enum CSRIndex
     CSR_VL           = 0xC20,
     CSR_VTYPE        = 0xC21,
     CSR_VLENB        = 0xC22,
-
+    // Matrix Extension
     CSR_MTYPE        = 0xC40,
     CSR_MTILEM       = 0xC41,
     CSR_MTILEK       = 0xC42,
     CSR_MTILEN       = 0xC43,
+    CSR_MLENB        = 0xC44,
+    CSR_MRLENB       = 0xC45,
+    CSR_MAMUL        = 0xC46,
+    CSR_MSTART       = 0xC47,
+    CSR_MCSR         = 0xC48,
 
     CSR_MNSCRATCH    = 0x740,
     CSR_MNEPC        = 0x741,
@@ -1234,7 +1241,7 @@ const std::unordered_map<int, CSRMetadata> CSRData = {
         {"vtype", MISCREG_VTYPE, rvTypeFlags(RV64, RV32), isaExtsFlags('v')}},
     {CSR_VLENB,
         {"VLENB", MISCREG_VLENB, rvTypeFlags(RV64, RV32), isaExtsFlags('v')}},
-
+    // Matrix Extension
     {CSR_MTYPE,
         {"MTYPE", MISCREG_MTYPE, rvTypeFlags(RV64, RV32), isaExtsFlags()}},
     {CSR_MTILEM,
@@ -1243,6 +1250,10 @@ const std::unordered_map<int, CSRMetadata> CSRData = {
         {"MTILEK", MISCREG_MTILEK, rvTypeFlags(RV64, RV32), isaExtsFlags()}},
     {CSR_MTILEN,
         {"MTILEN", MISCREG_MTILEN, rvTypeFlags(RV64, RV32), isaExtsFlags()}},
+    {CSR_MLENB,
+        {"mlenb", MISCREG_MLENB, rvTypeFlags(RV64, RV32), isaExtsFlags('m')}},
+    {CSR_MRLENB,
+        {"mrlenb", MISCREG_MRLENB, rvTypeFlags(RV64, RV32), isaExtsFlags('m')}},
 
     {CSR_MNSCRATCH,
         {"mnscratch", MISCREG_MNSCRATCH, rvTypeFlags(RV64, RV32),

@@ -70,9 +70,9 @@ class PCState : public GenericISA::UPCState<4>
     VTYPE _vtype = (1ULL << 63); // vtype.vill = 1 at initial;
     uint32_t _vl = 0;
     MTYPE _mtype = (1ULL << 63); // mtype.vill = 1 at initial;
-    MTILEM _mtilem = 0;
-    MTILEK _mtilek = 0;
-    MTILEN _mtilen = 0;
+    uint32_t _mtilem = 0;
+    uint32_t _mtilek = 0;
+    uint32_t _mtilen = 0;
     bool _zcmtSecondFetch = false;
     Addr _zcmtPc = 0;
 
@@ -129,14 +129,14 @@ class PCState : public GenericISA::UPCState<4>
     void mtype(MTYPE v) { _mtype = v; }
     MTYPE mtype() const { return _mtype; }
 
-    void mtilem(MTILEM v) { _mtilem = v; }
-    MTILEM mtilem() const { return _mtilem; }
+    void mtilem(uint32_t v) { _mtilem = v; }
+    uint32_t mtilem() const { return _mtilem; }
 
-    void mtilek(MTILEK v) { _mtilek = v; }
-    MTILEK mtilek() const { return _mtilek; }
+    void mtilek(uint32_t v) { _mtilek = v; }
+    uint32_t mtilek() const { return _mtilek; }
 
-    void mtilen(MTILEN v) { _mtilen = v; }
-    MTILEN mtilen() const { return _mtilen; }
+    void mtilen(uint32_t v) { _mtilen = v; }
+    uint32_t mtilen() const { return _mtilen; }
 
     void zcmtSecondFetch(bool z) { _zcmtSecondFetch = z; }
     bool zcmtSecondFetch() const { return _zcmtSecondFetch; }

@@ -45,6 +45,12 @@ Decoder::Decoder(const RiscvDecoderParams &p) : InstDecoder(p, &machInst)
     ISA *isa = dynamic_cast<ISA*>(p.isa);
     vlen = isa->getVecLenInBits();
     elen = isa->getVecElemLenInBits();
+
+    // Matrix Extension
+    melen = isa->getMatElemLenInBits();
+    mlen = isa->getMatLenInBits(); 
+    mrlen = isa->getMatRowLenInBits();
+
     _enableZcd = isa->enableZcd();
     reset();
 }

@@ -201,7 +201,7 @@ BitUnion64(ExtMachInst)
     Bitfield<25>        im;
     Bitfield<24, 15>    imm10;
 
-    Bitfield<24, 20>    setval;
+    Bitfield<24, 20>    mimm;
     Bitfield<18, 15>    field;
 
 EndBitUnion(ExtMachInst)
